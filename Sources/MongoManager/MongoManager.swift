@@ -6,9 +6,25 @@ public struct MongoData {
     public let database: String
     public let dataSource: String
     public let apiKey: String?
-    public let contentType = "application/json"
-    public let accessControlRequestHeaders = "*"
-    public let accept = "application/json"
+    public let contentType: String
+    public let accessControlRequestHeaders: String
+    public let accept: String
+    
+    public init(baseURL: String,
+                database: String,
+                dataSource: String,
+                apiKey: String?,
+                contentType: String = "application/json",
+                accessControlRequestHeaders: String = "*",
+                accept: String = "application/json") {
+        self.baseURL = baseURL
+        self.database = database
+        self.dataSource = dataSource
+        self.apiKey = apiKey
+        self.contentType = contentType
+        self.accessControlRequestHeaders = accessControlRequestHeaders
+        self.accept = accept
+    }
 }
 
 public struct MongoManager {
