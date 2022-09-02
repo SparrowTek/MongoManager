@@ -7,7 +7,7 @@ This can all be easily hosted on [Swift Cloud](https://swift.cloud)
 Install MongoManager
 
 ```swift
-.package(url: "https://github.com/SparrowTek/MongoManager", from: "1.0.1")
+.package(url: "https://github.com/SparrowTek/MongoManager", from: "1.0.2")
 ```
 
 Add it as a target dependency
