@@ -31,7 +31,7 @@ public struct MongoData {
 public struct MongoManager {
     
     /// unwrap your `Codable` object from the MongoDB Document object
-    public static func unwrapDocument<C: Codable>(_ document: MongoDocument<C>) -> C {
+    public static func unwrapDocument(_ document: MongoDocument<some Codable>) -> some Codable {
         document.document
     }
     
@@ -39,7 +39,7 @@ public struct MongoManager {
     /// - Parameters res: A `FetchResponse` object to decode
     /// - Returns an object conforming to `Codable`
     public static func decodeDocument<C: Codable>(from res: FetchResponse) async throws -> C {
-        unwrapDocument(try await res.body.decode(MongoDocument<C>.self))
+        try await res.body.decode(MongoDocument<C>.self).document
     }
     
     private static func headers(for data: MongoData) -> [String : String] {
@@ -57,10 +57,10 @@ public struct MongoManager {
     /// - Parameter filter: A `Codable` object to be passed as a filter
     /// - Parameter projection: A `Codable` object to be passed as a projection
     /// - Returns a `FetchResponse` from the `Compute` framework
-    public static func findOne<F: Codable, P: Codable>(mongoData: MongoData, collection: String, filter: F, projection: P) async throws -> FetchResponse {
+    public static func findOne(mongoData: MongoData, collection: String, filter: some Codable, projection: some Codable) async throws -> FetchResponse {
         try await fetch("\(mongoData.baseURL)/action/findOne", .options(
             method: .post,
-            body: .json(FindOneRequest<F, P>(collection: collection, database: mongoData.database, dataSource: mongoData.dataSource, filter: filter, projection: projection)),
+            body: .json(FindOneRequest(collection: collection, database: mongoData.database, dataSource: mongoData.dataSource, filter: filter, projection: projection)),
             headers: headers(for: mongoData)
         ))
     }
@@ -100,16 +100,16 @@ public struct MongoManager {
     /// - Parameter limit: An optional `Int` to be passed as a limit
     /// - Parameter skip: An optional `Int` to be passed as a skip
     /// - Returns a `FetchResponse` from the `Compute` framework
-    public static func find<F: Codable, P: Codable, S: Codable>(mongoData: MongoData,
-                                                                collection: String,
-                                                                filter: F,
-                                                                projection: P,
-                                                                sort: S,
-                                                                limit: Int? = nil,
-                                                                skip: Int? = nil) async throws -> FetchResponse {
+    public static func find(mongoData: MongoData,
+                            collection: String,
+                            filter: some Codable,
+                            projection: some Codable,
+                            sort: some Codable,
+                            limit: Int? = nil,
+                            skip: Int? = nil) async throws -> FetchResponse {
         try await fetch("\(mongoData.baseURL)/action/find", .options(
             method: .post,
-            body: .json(FindRequest<F, P, S>(collection: collection, database: mongoData.database, dataSource: mongoData.dataSource, filter: filter, projection: projection, sort: sort, limit: limit, skip: skip)),
+            body: .json(FindRequest(collection: collection, database: mongoData.database, dataSource: mongoData.dataSource, filter: filter, projection: projection, sort: sort, limit: limit, skip: skip)),
             headers: headers(for: mongoData)
         ))
     }
@@ -131,9 +131,9 @@ public struct MongoManager {
     /// - Parameter limit: An optional `Int` to be passed as a limit
     /// - Parameter skip: An optional `Int` to be passed as a skip
     /// - Returns a `FetchResponse` from the `Compute` framework
-    public static func find<F: Codable>(mongoData: MongoData,
+    public static func find(mongoData: MongoData,
                                         collection: String,
-                                        filter: F,
+                                        filter: some Codable,
                                         limit: Int? = nil,
                                         skip: Int? = nil) async throws -> FetchResponse {
         try await find(mongoData: mongoData, collection: collection, filter: filter, projection: Empty(), sort: Empty(), limit: limit, skip: skip)
@@ -147,10 +147,10 @@ public struct MongoManager {
     /// - Parameter limit: An optional `Int` to be passed as a limit
     /// - Parameter skip: An optional `Int` to be passed as a skip
     /// - Returns a `FetchResponse` from the `Compute` framework
-    public static func find<F: Codable, P: Codable>(mongoData: MongoData,
+    public static func find(mongoData: MongoData,
                                                     collection: String,
-                                                    filter: F,
-                                                    projection: P,
+                                                    filter: some Codable,
+                                                    projection: some Codable,
                                                     limit: Int? = nil,
                                                     skip: Int? = nil) async throws -> FetchResponse {
         try await find(mongoData: mongoData, collection: collection, filter: filter, projection: projection, sort: Empty(), limit: limit, skip: skip)
@@ -164,10 +164,10 @@ public struct MongoManager {
     /// - Parameter limit: An optional `Int` to be passed as a limit
     /// - Parameter skip: An optional `Int` to be passed as a skip
     /// - Returns a `FetchResponse` from the `Compute` framework
-    public static func find<F: Codable, S: Codable>(mongoData: MongoData,
+    public static func find(mongoData: MongoData,
                                                     collection: String,
-                                                    filter: F,
-                                                    sort: S,
+                                                    filter: some Codable,
+                                                    sort: some Codable,
                                                     limit: Int? = nil,
                                                     skip: Int? = nil) async throws -> FetchResponse {
         try await find(mongoData: mongoData, collection: collection, filter: filter, projection: Empty(), sort: sort, limit: limit, skip: skip)
@@ -180,9 +180,9 @@ public struct MongoManager {
     /// - Parameter limit: An optional `Int` to be passed as a limit
     /// - Parameter skip: An optional `Int` to be passed as a skip
     /// - Returns a `FetchResponse` from the `Compute` framework
-    public static func find<P: Codable>(mongoData: MongoData,
+    public static func find(mongoData: MongoData,
                                         collection: String,
-                                        projection: P,
+                                        projection: some Codable,
                                         limit: Int? = nil,
                                         skip: Int? = nil) async throws -> FetchResponse {
         try await find(mongoData: mongoData, collection: collection, filter: Empty(), projection: projection, sort: Empty(), limit: limit, skip: skip)
@@ -196,10 +196,10 @@ public struct MongoManager {
     /// - Parameter limit: An optional `Int` to be passed as a limit
     /// - Parameter skip: An optional `Int` to be passed as a skip
     /// - Returns a `FetchResponse` from the `Compute` framework
-    public static func find<P: Codable, S: Codable>(mongoData: MongoData,
+    public static func find(mongoData: MongoData,
                                                     collection: String,
-                                                    projection: P,
-                                                    sort: S,
+                                                    projection: some Codable,
+                                                    sort: some Codable,
                                                     limit: Int? = nil,
                                                     skip: Int? = nil) async throws -> FetchResponse {
         try await find(mongoData: mongoData, collection: collection, filter: Empty(), projection: projection, sort: sort, limit: limit, skip: skip)
@@ -212,9 +212,9 @@ public struct MongoManager {
     /// - Parameter limit: An optional `Int` to be passed as a limit
     /// - Parameter skip: An optional `Int` to be passed as a skip
     /// - Returns a `FetchResponse` from the `Compute` framework
-    public static func find<S: Codable>(mongoData: MongoData,
+    public static func find(mongoData: MongoData,
                                         collection: String,
-                                        sort: S,
+                                        sort: some Codable,
                                         limit: Int? = nil,
                                         skip: Int? = nil) async throws -> FetchResponse {
         try await find(mongoData: mongoData, collection: collection, filter: Empty(), projection: Empty(), sort: sort, limit: limit, skip: skip)
@@ -225,7 +225,7 @@ public struct MongoManager {
     /// - Parameter collection: A `String` of the MongoDB collection name to be used
     /// - Parameter document: A `Codable` object to be passed as a document
     /// - Returns a `FetchResponse` from the `Compute` framework
-    public static func insertOne<C: Codable>(mongoData: MongoData, collection: String, document: C) async throws -> FetchResponse{
+    public static func insertOne(mongoData: MongoData, collection: String, document: some Codable) async throws -> FetchResponse{
         try await fetch("\(mongoData.baseURL)/action/insertOne", .options(
             method: .post,
             body: .json(InsertOneRequest(collection: collection, database: mongoData.database, dataSource: mongoData.dataSource, document: document)),
@@ -238,7 +238,7 @@ public struct MongoManager {
     /// - Parameter collection: A `String` of the MongoDB collection name to be used
     /// - Parameter documents: An array of `Codable` objects to be passed as documents
     /// - Returns a `FetchResponse` from the `Compute` framework
-    public static func insertMany<C: Codable>(mongoData: MongoData, collection: String, documents: [C]) async throws -> FetchResponse{
+    public static func insertMany(mongoData: MongoData, collection: String, documents: [some Codable]) async throws -> FetchResponse{
         try await fetch("\(mongoData.baseURL)/action/insertMany", .options(
             method: .post,
             body: .json(InsertRequest(collection: collection, database: mongoData.database, dataSource: mongoData.dataSource, documents: documents)),
@@ -253,10 +253,10 @@ public struct MongoManager {
     /// - Parameter update: A `Codable` object to be passed as an update
     /// - Parameter upsert: An optional `Bool` to be passed as an upsert
     /// - Returns a `FetchResponse` from the `Compute` framework
-    public static func updateOne<F: Codable, U: Codable>(mongoData: MongoData, collection: String, filter: F, update: U, upsert: Bool? = nil) async throws -> FetchResponse {
+    public static func updateOne(mongoData: MongoData, collection: String, filter: some Codable, update: some Codable, upsert: Bool? = nil) async throws -> FetchResponse {
         try await fetch("\(mongoData.baseURL)/action/updateOne", .options(
             method: .post,
-            body: .json(UpdateRequest<F, U>(collection: collection, database: mongoData.database, dataSource: mongoData.dataSource, filter: filter, update: update, upsert: upsert)),
+            body: .json(UpdateRequest(collection: collection, database: mongoData.database, dataSource: mongoData.dataSource, filter: filter, update: update, upsert: upsert)),
             headers: headers(for: mongoData)
         ))
     }
@@ -268,10 +268,10 @@ public struct MongoManager {
     /// - Parameter update: A `Codable` object to be passed as an update
     /// - Parameter upsert: An optional `Bool` to be passed as an upsert
     /// - Returns a `FetchResponse` from the `Compute` framework
-    public static func updateMany<F: Codable, U: Codable>(mongoData: MongoData, collection: String, filter: F, update: U, upsert: Bool? = nil) async throws -> FetchResponse {
+    public static func updateMany(mongoData: MongoData, collection: String, filter: some Codable, update: some Codable, upsert: Bool? = nil) async throws -> FetchResponse {
         try await fetch("\(mongoData.baseURL)/action/updateMany", .options(
             method: .post,
-            body: .json(UpdateRequest<F, U>(collection: collection, database: mongoData.database, dataSource: mongoData.dataSource, filter: filter, update: update, upsert: upsert)),
+            body: .json(UpdateRequest(collection: collection, database: mongoData.database, dataSource: mongoData.dataSource, filter: filter, update: update, upsert: upsert)),
             headers: headers(for: mongoData)
         ))
     }
@@ -283,10 +283,10 @@ public struct MongoManager {
     /// - Parameter replacement: A `Codable` object to be passed as the replacement
     /// - Parameter upsert: An optional `Bool` to be passed as an upsert
     /// - Returns a `FetchResponse` from the `Compute` framework
-    public static func replaceOne<F: Codable, R: Codable>(mongoData: MongoData, collection: String, filter: F, replacement: R, upsert: Bool? = nil) async throws -> FetchResponse {
+    public static func replaceOne(mongoData: MongoData, collection: String, filter: some Codable, replacement: some Codable, upsert: Bool? = nil) async throws -> FetchResponse {
         try await fetch("\(mongoData.baseURL)/action/replaceOne", .options(
             method: .post,
-            body: .json(ReplaceRequest<F, R>(collection: collection, database: mongoData.database, dataSource: mongoData.dataSource, filter: filter, replacement: replacement, upsert: upsert)),
+            body: .json(ReplaceRequest(collection: collection, database: mongoData.database, dataSource: mongoData.dataSource, filter: filter, replacement: replacement, upsert: upsert)),
             headers: headers(for: mongoData)
         ))
     }
@@ -296,10 +296,10 @@ public struct MongoManager {
     /// - Parameter collection: A `String` of the MongoDB collection name to be used
     /// - Parameter filter: A `Codable` object to be passed as a filter
     /// - Returns a `FetchResponse` from the `Compute` framework
-    public static func deleteOne<F: Codable>(mongoData: MongoData, collection: String, filter: F) async throws -> FetchResponse {
+    public static func deleteOne(mongoData: MongoData, collection: String, filter: some Codable) async throws -> FetchResponse {
         try await fetch("\(mongoData.baseURL)/action/deleteOne", .options(
             method: .post,
-            body: .json(DeleteRequest<F>(collection: collection, database: mongoData.database, dataSource: mongoData.dataSource, filter: filter)),
+            body: .json(DeleteRequest(collection: collection, database: mongoData.database, dataSource: mongoData.dataSource, filter: filter)),
             headers: headers(for: mongoData)
         ))
     }
@@ -309,10 +309,10 @@ public struct MongoManager {
     /// - Parameter collection: A `String` of the MongoDB collection name to be used
     /// - Parameter pipeline: An array of `Codable` objects to be passed as a pipeline
     /// - Returns a `FetchResponse` from the `Compute` framework
-    public static func aggregate<P: Codable>(mongoData: MongoData, collection: String, pipeline: [P]) async throws -> FetchResponse {
+    public static func aggregate(mongoData: MongoData, collection: String, pipeline: [some Codable]) async throws -> FetchResponse {
         try await fetch("\(mongoData.baseURL)/action/aggregate", .options(
             method: .post,
-            body: .json(AggregateRequest<P>(collection: collection, database: mongoData.database, dataSource: mongoData.dataSource, pipeline: pipeline)),
+            body: .json(AggregateRequest(collection: collection, database: mongoData.database, dataSource: mongoData.dataSource, pipeline: pipeline)),
             headers: headers(for: mongoData)
         ))
     }
