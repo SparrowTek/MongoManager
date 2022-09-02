@@ -1,6 +1,7 @@
 import Foundation
 import Compute
 
+/// An object passed as a parameter to all `MongoManager` methods with infomation about your MongoDB Atlas instance
 public struct MongoData {
     public let baseURL: String
     public let database: String
@@ -29,6 +30,7 @@ public struct MongoData {
 
 public struct MongoManager {
     
+    /// unwrap your `Codable` object from the MongoDB Document object
     public static func unwrapDocument<C: Codable>(_ document: MongoDocument<C>) -> C {
         document.document
     }
@@ -42,6 +44,13 @@ public struct MongoManager {
         ]
     }
     
+    /** Query the MongoDB Data API findOne action
+     - Parameter mongoData: A `MongoData` object with all the credentials for your MongoDB Atlas instance
+     - Parameter collection: A `String` of the MongoDB collection name to be used
+     - Parameter filter: An optional `Codable` object to be passed as a filter
+     - Parameter projection: An optional `Codable` object to be passed as a projection
+     - Returns a `FetchResponse` from the `Compute` framework
+     **/
     public static func findOne<F: Codable, P: Codable>(mongoData: MongoData, collection: String, filter: F? = nil, projection: P? = nil) async throws -> FetchResponse {
         try await fetch("\(mongoData.baseURL)/action/findOne", .options(
             method: .post,
@@ -50,6 +59,16 @@ public struct MongoManager {
         ))
     }
     
+    /** Query the MongoDB Data API find action
+     - Parameter mongoData: A `MongoData` object with all the credentials for your MongoDB Atlas instance
+     - Parameter collection: A `String` of the MongoDB collection name to be used
+     - Parameter filter: An optional `Codable` object to be passed as a filter
+     - Parameter projection: An optional`Codable` object to be passed as a projection
+     - Parameter sort: An optional `Codable` object to be passed as a sort
+     - Parameter limit: An optional `Int` to be passed as a limit
+     - Parameter skip: An optional `Int` to be passed as a skip
+     - Returns a `FetchResponse` from the `Compute` framework
+     **/
     public static func find<F: Codable, P: Codable, S: Codable>(mongoData: MongoData,
                                                                 collection: String,
                                                                 filter: F? = nil,
@@ -64,6 +83,12 @@ public struct MongoManager {
         ))
     }
     
+    /** Query the MongoDB Data API insertOne action
+     - Parameter mongoData: A `MongoData` object with all the credentials for your MongoDB Atlas instance
+     - Parameter collection: A `String` of the MongoDB collection name to be used
+     - Parameter document: A `Codable` object to be passed as a document
+     - Returns a `FetchResponse` from the `Compute` framework
+     **/
     public static func insertOne<C: Codable>(mongoData: MongoData, collection: String, document: C) async throws -> FetchResponse{
         try await fetch("\(mongoData.baseURL)/action/insertOne", .options(
             method: .post,
@@ -72,6 +97,12 @@ public struct MongoManager {
         ))
     }
     
+    /** Query the MongoDB Data API insertMany action
+     - Parameter mongoData: A `MongoData` object with all the credentials for your MongoDB Atlas instance
+     - Parameter collection: A `String` of the MongoDB collection name to be used
+     - Parameter documents: An array of `Codable` objects to be passed as documents
+     - Returns a `FetchResponse` from the `Compute` framework
+     **/
     public static func insertMany<C: Codable>(mongoData: MongoData, collection: String, documents: [C]) async throws -> FetchResponse{
         try await fetch("\(mongoData.baseURL)/action/insertMany", .options(
             method: .post,
@@ -80,6 +111,14 @@ public struct MongoManager {
         ))
     }
     
+    /** Query the MongoDB Data API updateOne action
+     - Parameter mongoData: A `MongoData` object with all the credentials for your MongoDB Atlas instance
+     - Parameter collection: A `String` of the MongoDB collection name to be used
+     - Parameter filter: A `Codable` object to be passed as a filter
+     - Parameter update: A `Codable` object to be passed as an update
+     - Parameter upsert: An optional `Bool` to be passed as an upsert
+     - Returns a `FetchResponse` from the `Compute` framework
+     **/
     public static func updateOne<F: Codable, U: Codable>(mongoData: MongoData, collection: String, filter: F, update: U, upsert: Bool? = nil) async throws -> FetchResponse {
         try await fetch("\(mongoData.baseURL)/action/updateOne", .options(
             method: .post,
@@ -88,6 +127,14 @@ public struct MongoManager {
         ))
     }
     
+    /** Query the MongoDB Data API updateMany action
+     - Parameter mongoData: A `MongoData` object with all the credentials for your MongoDB Atlas instance
+     - Parameter collection: A `String` of the MongoDB collection name to be used
+     - Parameter filter: A `Codable` object to be passed as a filter
+     - Parameter update: A `Codable` object to be passed as an update
+     - Parameter upsert: An optional `Bool` to be passed as an upsert
+     - Returns a `FetchResponse` from the `Compute` framework
+     **/
     public static func updateMany<F: Codable, U: Codable>(mongoData: MongoData, collection: String, filter: F, update: U, upsert: Bool? = nil) async throws -> FetchResponse {
         try await fetch("\(mongoData.baseURL)/action/updateMany", .options(
             method: .post,
@@ -96,6 +143,14 @@ public struct MongoManager {
         ))
     }
     
+    /** Query the MongoDB Data API replaceOne action
+     - Parameter mongoData: A `MongoData` object with all the credentials for your MongoDB Atlas instance
+     - Parameter collection: A `String` of the MongoDB collection name to be used
+     - Parameter filter: A `Codable` object to be passed as a filter
+     - Parameter replacement: A `Codable` object to be passed as the replacement
+     - Parameter upsert: An optional `Bool` to be passed as an upsert
+     - Returns a `FetchResponse` from the `Compute` framework
+     **/
     public static func replaceOne<F: Codable, R: Codable>(mongoData: MongoData, collection: String, filter: F, replacement: R, upsert: Bool? = nil) async throws -> FetchResponse {
         try await fetch("\(mongoData.baseURL)/action/replaceOne", .options(
             method: .post,
@@ -104,6 +159,12 @@ public struct MongoManager {
         ))
     }
     
+    /** Query the MongoDB Data API deleteOne action
+     - Parameter mongoData: A `MongoData` object with all the credentials for your MongoDB Atlas instance
+     - Parameter collection: A `String` of the MongoDB collection name to be used
+     - Parameter filter: A `Codable` object to be passed as a filter
+     - Returns a `FetchResponse` from the `Compute` framework
+     **/
     public static func deleteOne<F: Codable>(mongoData: MongoData, collection: String, filter: F) async throws -> FetchResponse {
         try await fetch("\(mongoData.baseURL)/action/deleteOne", .options(
             method: .post,
@@ -112,6 +173,12 @@ public struct MongoManager {
         ))
     }
     
+    /** Query the MongoDB Data API aggregate action
+     - Parameter mongoData: A `MongoData` object with all the credentials for your MongoDB Atlas instance
+     - Parameter collection: A `String` of the MongoDB collection name to be used
+     - Parameter pipeline: An array of `Codable` objects to be passed as a pipeline
+     - Returns a `FetchResponse` from the `Compute` framework
+     **/
     public static func aggregate<P: Codable>(mongoData: MongoData, collection: String, pipeline: [P]) async throws -> FetchResponse {
         try await fetch("\(mongoData.baseURL)/action/aggregate", .options(
             method: .post,
