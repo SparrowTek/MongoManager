@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "compute",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swift-cloud/Compute",
+      "state" : {
+        "revision" : "644a3468520aae854287dd1da0e99e8ebb667324",
+        "version" : "1.8.0"
+      }
+    }
+  ],
+  "version" : 2
+}
