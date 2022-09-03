@@ -180,7 +180,7 @@ public struct MongoManager {
     
     // MARK: Codable objects
     public struct MongoDocument<C: Codable>: Codable {
-        let document: C
+        public let document: C
     }
     
     struct InsertOneRequest<C: Codable>: Codable {
