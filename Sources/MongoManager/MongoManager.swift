@@ -35,6 +35,13 @@ public struct MongoManager {
         document.document
     }
     
+    /// decode a `MongoDocument` from the given FetchResponse
+    /// - Parameters res: A `FetchResponse` object to decode
+    /// - Returns an object conforming to `Codable`
+    public static func decodeDocument<C: Codable>(from res: FetchResponse) async throws -> C {
+        unwrapDocument(try await res.body.decode(MongoDocument<C>.self))
+    }
+    
     private static func headers(for data: MongoData) -> [String : String] {
         [
             "Content-Type" : data.contentType,
