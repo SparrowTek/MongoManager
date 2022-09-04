@@ -54,10 +54,10 @@ public struct MongoManager {
     /// Query the MongoDB Data API findOne action
     /// - Parameter mongoData: A `MongoData` object with all the credentials for your MongoDB Atlas instance
     /// - Parameter collection: A `String` of the MongoDB collection name to be used
-    /// - Parameter filter: An optional `Codable` object to be passed as a filter
-    /// - Parameter projection: An optional `Codable` object to be passed as a projection
+    /// - Parameter filter: A `Codable` object to be passed as a filter
+    /// - Parameter projection: A `Codable` object to be passed as a projection
     /// - Returns a `FetchResponse` from the `Compute` framework
-    public static func findOne<F: Codable, P: Codable>(mongoData: MongoData, collection: String, filter: F? = nil, projection: P? = nil) async throws -> FetchResponse {
+    public static func findOne<F: Codable, P: Codable>(mongoData: MongoData, collection: String, filter: F, projection: P) async throws -> FetchResponse {
         try await fetch("\(mongoData.baseURL)/action/findOne", .options(
             method: .post,
             body: .json(FindOneRequest<F, P>(collection: collection, database: mongoData.database, dataSource: mongoData.dataSource, filter: filter, projection: projection)),
@@ -65,20 +65,46 @@ public struct MongoManager {
         ))
     }
     
+    /// Query the MongoDB Data API findOne action
+    /// - Parameter mongoData: A `MongoData` object with all the credentials for your MongoDB Atlas instance
+    /// - Parameter collection: A `String` of the MongoDB collection name to be used
+    /// - Returns a `FetchResponse` from the `Compute` framework
+    public static func findOne(mongoData: MongoData, collection: String) async throws -> FetchResponse {
+        try await findOne(mongoData: mongoData, collection: collection, filter: Empty(), projection: Empty())
+    }
+    
+    /// Query the MongoDB Data API findOne action
+    /// - Parameter mongoData: A `MongoData` object with all the credentials for your MongoDB Atlas instance
+    /// - Parameter collection: A `String` of the MongoDB collection name to be used
+    /// - Parameter filter: A `Codable` object to be passed as a filter
+    /// - Returns a `FetchResponse` from the `Compute` framework
+    public static func findOne<F: Codable>(mongoData: MongoData, collection: String, filter: F) async throws -> FetchResponse {
+        try await findOne(mongoData: mongoData, collection: collection, filter: filter, projection: Empty())
+    }
+    
+    /// Query the MongoDB Data API findOne action
+    /// - Parameter mongoData: A `MongoData` object with all the credentials for your MongoDB Atlas instance
+    /// - Parameter collection: A `String` of the MongoDB collection name to be used
+    /// - Parameter projection: A `Codable` object to be passed as a projection
+    /// - Returns a `FetchResponse` from the `Compute` framework
+    public static func findOne<P: Codable>(mongoData: MongoData, collection: String, projection: P) async throws -> FetchResponse {
+        try await findOne(mongoData: mongoData, collection: collection, filter: Empty(), projection: projection)
+    }
+    
     /// Query the MongoDB Data API find action
     /// - Parameter mongoData: A `MongoData` object with all the credentials for your MongoDB Atlas instance
     /// - Parameter collection: A `String` of the MongoDB collection name to be used
-    /// - Parameter filter: An optional `Codable` object to be passed as a filter
-    /// - Parameter projection: An optional`Codable` object to be passed as a projection
-    /// - Parameter sort: An optional `Codable` object to be passed as a sort
+    /// - Parameter filter: A `Codable` object to be passed as a filter
+    /// - Parameter projection: A `Codable` object to be passed as a projection
+    /// - Parameter sort: A `Codable` object to be passed as a sort
     /// - Parameter limit: An optional `Int` to be passed as a limit
     /// - Parameter skip: An optional `Int` to be passed as a skip
     /// - Returns a `FetchResponse` from the `Compute` framework
     public static func find<F: Codable, P: Codable, S: Codable>(mongoData: MongoData,
                                                                 collection: String,
-                                                                filter: F? = nil,
-                                                                projection: P? = nil,
-                                                                sort: S? = nil,
+                                                                filter: F,
+                                                                projection: P,
+                                                                sort: S,
                                                                 limit: Int? = nil,
                                                                 skip: Int? = nil) async throws -> FetchResponse {
         try await fetch("\(mongoData.baseURL)/action/find", .options(
@@ -86,6 +112,112 @@ public struct MongoManager {
             body: .json(FindRequest<F, P, S>(collection: collection, database: mongoData.database, dataSource: mongoData.dataSource, filter: filter, projection: projection, sort: sort, limit: limit, skip: skip)),
             headers: headers(for: mongoData)
         ))
+    }
+    
+    /// Query the MongoDB Data API find action
+    /// - Parameter mongoData: A `MongoData` object with all the credentials for your MongoDB Atlas instance
+    /// - Parameter collection: A `String` of the MongoDB collection name to be used
+    /// - Parameter limit: An optional `Int` to be passed as a limit
+    /// - Parameter skip: An optional `Int` to be passed as a skip
+    /// - Returns a `FetchResponse` from the `Compute` framework
+    public static func find(mongoData: MongoData, collection: String, limit: Int? = nil, skip: Int? = nil) async throws -> FetchResponse {
+        try await find(mongoData: mongoData, collection: collection, filter: Empty(), projection: Empty(), sort: Empty(), limit: limit, skip: skip)
+    }
+    
+    /// Query the MongoDB Data API find action
+    /// - Parameter mongoData: A `MongoData` object with all the credentials for your MongoDB Atlas instance
+    /// - Parameter collection: A `String` of the MongoDB collection name to be used
+    /// - Parameter filter: A `Codable` object to be passed as a filter
+    /// - Parameter limit: An optional `Int` to be passed as a limit
+    /// - Parameter skip: An optional `Int` to be passed as a skip
+    /// - Returns a `FetchResponse` from the `Compute` framework
+    public static func find<F: Codable>(mongoData: MongoData,
+                                        collection: String,
+                                        filter: F,
+                                        limit: Int? = nil,
+                                        skip: Int? = nil) async throws -> FetchResponse {
+        try await find(mongoData: mongoData, collection: collection, filter: filter, projection: Empty(), sort: Empty(), limit: limit, skip: skip)
+    }
+    
+    /// Query the MongoDB Data API find action
+    /// - Parameter mongoData: A `MongoData` object with all the credentials for your MongoDB Atlas instance
+    /// - Parameter collection: A `String` of the MongoDB collection name to be used
+    /// - Parameter filter: A `Codable` object to be passed as a filter
+    /// - Parameter projection: A `Codable` object to be passed as a projection
+    /// - Parameter limit: An optional `Int` to be passed as a limit
+    /// - Parameter skip: An optional `Int` to be passed as a skip
+    /// - Returns a `FetchResponse` from the `Compute` framework
+    public static func find<F: Codable, P: Codable>(mongoData: MongoData,
+                                                    collection: String,
+                                                    filter: F,
+                                                    projection: P,
+                                                    limit: Int? = nil,
+                                                    skip: Int? = nil) async throws -> FetchResponse {
+        try await find(mongoData: mongoData, collection: collection, filter: filter, projection: projection, sort: Empty(), limit: limit, skip: skip)
+    }
+    
+    /// Query the MongoDB Data API find action
+    /// - Parameter mongoData: A `MongoData` object with all the credentials for your MongoDB Atlas instance
+    /// - Parameter collection: A `String` of the MongoDB collection name to be used
+    /// - Parameter filter: A `Codable` object to be passed as a filter
+    /// - Parameter sort: A `Codable` object to be passed as a sort
+    /// - Parameter limit: An optional `Int` to be passed as a limit
+    /// - Parameter skip: An optional `Int` to be passed as a skip
+    /// - Returns a `FetchResponse` from the `Compute` framework
+    public static func find<F: Codable, S: Codable>(mongoData: MongoData,
+                                                    collection: String,
+                                                    filter: F,
+                                                    sort: S,
+                                                    limit: Int? = nil,
+                                                    skip: Int? = nil) async throws -> FetchResponse {
+        try await find(mongoData: mongoData, collection: collection, filter: filter, projection: Empty(), sort: sort, limit: limit, skip: skip)
+    }
+    
+    /// Query the MongoDB Data API find action
+    /// - Parameter mongoData: A `MongoData` object with all the credentials for your MongoDB Atlas instance
+    /// - Parameter collection: A `String` of the MongoDB collection name to be used
+    /// - Parameter projection: A `Codable` object to be passed as a projection
+    /// - Parameter limit: An optional `Int` to be passed as a limit
+    /// - Parameter skip: An optional `Int` to be passed as a skip
+    /// - Returns a `FetchResponse` from the `Compute` framework
+    public static func find<P: Codable>(mongoData: MongoData,
+                                        collection: String,
+                                        projection: P,
+                                        limit: Int? = nil,
+                                        skip: Int? = nil) async throws -> FetchResponse {
+        try await find(mongoData: mongoData, collection: collection, filter: Empty(), projection: projection, sort: Empty(), limit: limit, skip: skip)
+    }
+    
+    /// Query the MongoDB Data API find action
+    /// - Parameter mongoData: A `MongoData` object with all the credentials for your MongoDB Atlas instance
+    /// - Parameter collection: A `String` of the MongoDB collection name to be used
+    /// - Parameter projection: A `Codable` object to be passed as a projection
+    /// - Parameter sort: A `Codable` object to be passed as a sort
+    /// - Parameter limit: An optional `Int` to be passed as a limit
+    /// - Parameter skip: An optional `Int` to be passed as a skip
+    /// - Returns a `FetchResponse` from the `Compute` framework
+    public static func find<P: Codable, S: Codable>(mongoData: MongoData,
+                                                    collection: String,
+                                                    projection: P,
+                                                    sort: S,
+                                                    limit: Int? = nil,
+                                                    skip: Int? = nil) async throws -> FetchResponse {
+        try await find(mongoData: mongoData, collection: collection, filter: Empty(), projection: projection, sort: sort, limit: limit, skip: skip)
+    }
+    
+    /// Query the MongoDB Data API find action
+    /// - Parameter mongoData: A `MongoData` object with all the credentials for your MongoDB Atlas instance
+    /// - Parameter collection: A `String` of the MongoDB collection name to be used
+    /// - Parameter sort: A `Codable` object to be passed as a sort
+    /// - Parameter limit: An optional `Int` to be passed as a limit
+    /// - Parameter skip: An optional `Int` to be passed as a skip
+    /// - Returns a `FetchResponse` from the `Compute` framework
+    public static func find<S: Codable>(mongoData: MongoData,
+                                        collection: String,
+                                        sort: S,
+                                        limit: Int? = nil,
+                                        skip: Int? = nil) async throws -> FetchResponse {
+        try await find(mongoData: mongoData, collection: collection, filter: Empty(), projection: Empty(), sort: sort, limit: limit, skip: skip)
     }
     
     /// Query the MongoDB Data API insertOne action
@@ -254,5 +386,7 @@ public struct MongoManager {
         let dataSource: String
         let pipeline: [P]
     }
+    
+    struct Empty: Codable { }
 }
 
