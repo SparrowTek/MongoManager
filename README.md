@@ -7,7 +7,7 @@ This can all be easily hosted on [Swift Cloud](https://swift.cloud)
 Install MongoManager
 
 ```swift
-.package(url: "https://github.com/SparrowTek/MongoManager", from: "1.0.2")
+.package(url: "https://github.com/SparrowTek/MongoManager", from: "1.0.3")
 ```
 
 Add it as a target dependency
@@ -32,18 +32,27 @@ let mongoData = MongoData(baseURL: "https://data.mongodb-api.com/app/data-abcde/
 
 Your `baseURL` will be provided to you by MongoDB Atlas. You will configure `database` and `dataSource` in Atlas. You will create an `apiKey` when you setup the MongoDB Atlas Data API. This sample code is extracting that key from a Dictionary hosted on [Swift Cloud](https://swift.cloud).
 
-Now in your 
+Now in your route,
 
 ```swift
 struct MongoDBAtlasRoutes {
     static func regiser(_ router: Router) {
-        router.get("/mongo/user", createUser)
+        router.post("/mongo/user", createUser)
     }
     
     static func createUser(req: IncomingRequest, res: OutgoingResponse) async throws {
-        let user = User()
-        let mongo = try await MongoManager.insertOne(mongoData: mongoData, collection: "users", document: user)
-        try await res.status(mongo.status).send(mongo.data)
+        // create the Codable user object
+        let user = try await req.body.decode(User.self)
+        
+        do {
+            // use static insertOne method on MongoManager struct 
+            _ = try await MongoManager.insertOne(mongoData: mongoData, collection: mongoCollection, document: user)
+            // report back to API
+            try await res.status(.created).send(user)
+        } catch {
+            // handle error
+            try await res.status(.internalServerError).send(error.localizedDescription)
+        }
     }
 }
 ```
