@@ -41,7 +41,7 @@ struct MongoDBAtlasRoutes {
     }
     
     static func createUser(req: IncomingRequest, res: OutgoingResponse) async throws {
-        // create the Codable user object
+        // create the Codable user object from the req body
         let user = try await req.body.decode(User.self)
         
         do {
@@ -57,4 +57,4 @@ struct MongoDBAtlasRoutes {
 }
 ```
 
-This `GET` route will create a `User` object and insert it into your MongoDB `users` collection. 
+This `POST` route will create a `User` object from the request body and insert it into your MongoDB `users` collection. 
