@@ -43,7 +43,7 @@ public struct MongoManager {
     }
     
     /// unwrap your `Codable` array from the MongoDB Document object
-    public static func unwrapDocuments<C: Codable>(_ documents: MongoDocuments<C>) -> C {
+    public static func unwrapDocuments(_ documents: MongoDocuments<some Codable>) -> some Codable {
         documents.documents
     }
     
@@ -51,7 +51,7 @@ public struct MongoManager {
     /// - Parameters res: A `FetchResponse` object to decode
     /// - Returns an array of objects conforming to `Codable`
     public static func decodeDocuments<C: Codable>(from res: FetchResponse) async throws -> C {
-        unwrapDocuments(try await res.body.decode(MongoDocuments<C>.self))
+        try await res.body.decode(MongoDocuments<C>.self).documents
     }
     
     private static func headers(for data: MongoData) -> [String : String] {
