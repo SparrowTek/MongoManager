@@ -42,6 +42,18 @@ public struct MongoManager {
         try await res.body.decode(MongoDocument<C>.self).document
     }
     
+    /// unwrap your `Codable` array from the MongoDB Document object
+    public static func unwrapDocuments<C: Codable>(_ documents: MongoDocuments<C>) -> C {
+        documents.documents
+    }
+    
+    /// decode a `MongoDocuments` object from the given FetchResponse
+    /// - Parameters res: A `FetchResponse` object to decode
+    /// - Returns an array of objects conforming to `Codable`
+    public static func decodeDocuments<C: Codable>(from res: FetchResponse) async throws -> C {
+        unwrapDocuments(try await res.body.decode(MongoDocuments<C>.self))
+    }
+    
     private static func headers(for data: MongoData) -> [String : String] {
         [
             "Content-Type" : data.contentType,
@@ -320,6 +332,10 @@ public struct MongoManager {
     // MARK: Codable objects
     public struct MongoDocument<C: Codable>: Codable {
         public let document: C
+    }
+    
+    public struct MongoDocuments<C: Codable>: Codable {
+        public let documents: C
     }
     
     struct InsertOneRequest<C: Codable>: Codable {
