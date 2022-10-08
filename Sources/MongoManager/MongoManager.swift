@@ -144,10 +144,10 @@ public struct MongoManager {
     /// - Parameter skip: An optional `Int` to be passed as a skip
     /// - Returns a `FetchResponse` from the `Compute` framework
     public static func find(mongoData: MongoData,
-                                        collection: String,
-                                        filter: some Codable,
-                                        limit: Int? = nil,
-                                        skip: Int? = nil) async throws -> FetchResponse {
+                            collection: String,
+                            filter: some Codable,
+                            limit: Int? = nil,
+                            skip: Int? = nil) async throws -> FetchResponse {
         try await find(mongoData: mongoData, collection: collection, filter: filter, projection: Empty(), sort: Empty(), limit: limit, skip: skip)
     }
     
@@ -160,11 +160,11 @@ public struct MongoManager {
     /// - Parameter skip: An optional `Int` to be passed as a skip
     /// - Returns a `FetchResponse` from the `Compute` framework
     public static func find(mongoData: MongoData,
-                                                    collection: String,
-                                                    filter: some Codable,
-                                                    projection: some Codable,
-                                                    limit: Int? = nil,
-                                                    skip: Int? = nil) async throws -> FetchResponse {
+                            collection: String,
+                            filter: some Codable,
+                            projection: some Codable,
+                            limit: Int? = nil,
+                            skip: Int? = nil) async throws -> FetchResponse {
         try await find(mongoData: mongoData, collection: collection, filter: filter, projection: projection, sort: Empty(), limit: limit, skip: skip)
     }
     
@@ -177,11 +177,11 @@ public struct MongoManager {
     /// - Parameter skip: An optional `Int` to be passed as a skip
     /// - Returns a `FetchResponse` from the `Compute` framework
     public static func find(mongoData: MongoData,
-                                                    collection: String,
-                                                    filter: some Codable,
-                                                    sort: some Codable,
-                                                    limit: Int? = nil,
-                                                    skip: Int? = nil) async throws -> FetchResponse {
+                            collection: String,
+                            filter: some Codable,
+                            sort: some Codable,
+                            limit: Int? = nil,
+                            skip: Int? = nil) async throws -> FetchResponse {
         try await find(mongoData: mongoData, collection: collection, filter: filter, projection: Empty(), sort: sort, limit: limit, skip: skip)
     }
     
@@ -193,10 +193,10 @@ public struct MongoManager {
     /// - Parameter skip: An optional `Int` to be passed as a skip
     /// - Returns a `FetchResponse` from the `Compute` framework
     public static func find(mongoData: MongoData,
-                                        collection: String,
-                                        projection: some Codable,
-                                        limit: Int? = nil,
-                                        skip: Int? = nil) async throws -> FetchResponse {
+                            collection: String,
+                            projection: some Codable,
+                            limit: Int? = nil,
+                            skip: Int? = nil) async throws -> FetchResponse {
         try await find(mongoData: mongoData, collection: collection, filter: Empty(), projection: projection, sort: Empty(), limit: limit, skip: skip)
     }
     
@@ -209,11 +209,11 @@ public struct MongoManager {
     /// - Parameter skip: An optional `Int` to be passed as a skip
     /// - Returns a `FetchResponse` from the `Compute` framework
     public static func find(mongoData: MongoData,
-                                                    collection: String,
-                                                    projection: some Codable,
-                                                    sort: some Codable,
-                                                    limit: Int? = nil,
-                                                    skip: Int? = nil) async throws -> FetchResponse {
+                            collection: String,
+                            projection: some Codable,
+                            sort: some Codable,
+                            limit: Int? = nil,
+                            skip: Int? = nil) async throws -> FetchResponse {
         try await find(mongoData: mongoData, collection: collection, filter: Empty(), projection: projection, sort: sort, limit: limit, skip: skip)
     }
     
@@ -225,10 +225,10 @@ public struct MongoManager {
     /// - Parameter skip: An optional `Int` to be passed as a skip
     /// - Returns a `FetchResponse` from the `Compute` framework
     public static func find(mongoData: MongoData,
-                                        collection: String,
-                                        sort: some Codable,
-                                        limit: Int? = nil,
-                                        skip: Int? = nil) async throws -> FetchResponse {
+                            collection: String,
+                            sort: some Codable,
+                            limit: Int? = nil,
+                            skip: Int? = nil) async throws -> FetchResponse {
         try await find(mongoData: mongoData, collection: collection, filter: Empty(), projection: Empty(), sort: sort, limit: limit, skip: skip)
     }
     
