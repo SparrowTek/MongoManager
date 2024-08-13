@@ -1,3 +1,5 @@
+This repo is deprecated. It still works but is not maintained. You are better off using [MongoDB](https://github.com/swift-cloud/MongoDB) from the Swift Cloud team.
+
 # MongoManager
 A simple [Swift](https://www.swift.org) library to interact with [MongDB Atlas](https://www.mongodb.com/atlas) via their [Data API](https://www.mongodb.com/docs/atlas/api/data-api/) for [Compute](https://github.com/swift-cloud/Compute)
 
